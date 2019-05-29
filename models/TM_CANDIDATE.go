@@ -25,6 +25,11 @@ type TMCANDIDATE struct {
 	CANDIDATERANK  *TCDICTIONARY1 `orm:"column(CANDIDATE_RANK);rel(fk)" description:"参评等级"`
 }
 
+type candidateinfo struct {
+	CANDIDATENAME  string         `orm:"column(CANDIDATE_NAME);size(30);null" description:"参评人姓名"`
+	CANDIDATETYPE  string		  `orm:"column(value);size(30);null" description:"岗位类型"`
+}
+
 func (t *TMCANDIDATE) TableName() string {
 	return "TM_CANDIDATE"
 }
@@ -38,6 +43,35 @@ func init() {
 func AddTMCANDIDATE(m *TMCANDIDATE) (id int64, err error) {
 	o := orm.NewOrm()
 	id, err = o.Insert(m)
+	return
+}
+
+// Raw SQL方式select // by zbw
+func GetTMCANDIDATEWithType() (list []candidateinfo, err error) {
+	var num int64
+	o := orm.NewOrm()
+	candidates := make([]candidateinfo, 20)
+	sqlselect := "select a.CANDIDATE_NAME,b.value from isbprs.TM_CANDIDATE a,isbprs.TC_DICTIONARY1 b where a.candidate_type=b.dictionary1_id;"
+	num, err = o.Raw(sqlselect).QueryRows(&candidates)
+	if err != nil {
+		fmt.Println("查询CANDIDATE信息出错")
+	} else {
+		fmt.Printf("查询CANDIDATE信息成功,共:%d条\n", num)
+		return candidates, err
+	}
+	return nil, err
+}
+
+// Raw SQL方式insert // by zbw
+func AddTMCANDIDATEWithRawSql() (id int64, err error) {
+	o := orm.NewOrm()
+	sqlinsert := "insert into isbprs.TM_CANDIDATE(CA_ID,CANDIDATE_TYPE,CANDIDATE_DEPT,CANDIDATE_SITE,CANDIDATE_RANK) values (24,35,13,3,7);" //需要修改第一个变量24，唯一主键
+	_, err = o.Raw(sqlinsert).Exec()
+	if err != nil {
+		fmt.Println("新增CANDIDATE信息出错")
+	} else {
+		fmt.Println("新增CANDIDATE信息成功")
+	}
 	return
 }
 

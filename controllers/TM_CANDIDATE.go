@@ -46,6 +46,33 @@ func (c *TMCANDIDATEController) Post() {
 	c.ServeJSON()
 }
 
+// Raw SQL方式select // by zbw
+func (c *TMCANDIDATEController) GetTMCANDIDATEWithType() {
+	beego.Debug("TM_CANDIDATE controller: GetTMCANDIDATEWithType")
+	
+	// var candidateinfos []candidateinfo
+	l, err := models.GetTMCANDIDATEWithType()
+	if err != nil {
+		c.Data["json"] = err.Error()
+	} else {
+		c.Data["json"] = l
+	}
+	c.ServeJSON()
+}
+
+// Raw SQL方式insert // by zbw
+func (c *TMCANDIDATEController) AddTMCANDIDATEWithRawSql() {
+	beego.Debug("TM_CANDIDATE controller: AddTMCANDIDATEWithRawSql")
+	
+	id, err := models.AddTMCANDIDATEWithRawSql()
+	if err != nil {
+		c.Data["json"] = err.Error()
+	} else {
+		c.Data["json"] = id
+	}
+	c.ServeJSON()
+}
+
 // GetOne ...
 // @Title Get One
 // @Description get TMCANDIDATE by id
@@ -54,6 +81,8 @@ func (c *TMCANDIDATEController) Post() {
 // @Failure 403 :id is empty
 // @router /:id [get]
 func (c *TMCANDIDATEController) GetOne() {
+	beego.Debug("TM_CANDIDATE controller: GetOne")
+	
 	idStr := c.Ctx.Input.Param(":id")
 	id, _ := strconv.Atoi(idStr)
 	v, err := models.GetTMCANDIDATEById(id)
@@ -78,6 +107,8 @@ func (c *TMCANDIDATEController) GetOne() {
 // @Failure 403
 // @router / [get]
 func (c *TMCANDIDATEController) GetAll() {
+	beego.Debug("TM_CANDIDATE controller: GetAll")
+	
 	var fields []string
 	var sortby []string
 	var order []string

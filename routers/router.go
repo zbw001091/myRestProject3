@@ -9,13 +9,21 @@ package routers
 
 import (
 	"myRestProject3/controllers"
-
 	"github.com/astaxie/beego"
 )
 
 func init() {
-	// 用http://localhost:8080/api/ 方式来访问
-	beego.Router("/api", &controllers.TMCANDIDATEController{}, "get:GetAll")
+	// 用http://localhost:8080/candidate/ 方式来访问
+	beego.Router("/candidate", &controllers.TMCANDIDATEController{}, "get:GetAll")
+	
+	// 用http://localhost:8080/candidate/5 方式来访问
+	beego.Router("/candidate/:id", &controllers.TMCANDIDATEController{}, "get:GetOne")
+	
+	// ***用http://localhost:8080/candidateinfos/ 的GET方式来访问
+	beego.Router("/candidateinfos", &controllers.TMCANDIDATEController{}, "get:GetTMCANDIDATEWithType")
+	
+	// ***用http://localhost:8080/addTMCANDIDATEWithRawSql/ 的GET方式来访问
+	beego.Router("/addTMCANDIDATEWithRawSql", &controllers.TMCANDIDATEController{}, "get:AddTMCANDIDATEWithRawSql")
 	
 	// 这部分urlmapping不work
 	ns := beego.NewNamespace("/v1",
